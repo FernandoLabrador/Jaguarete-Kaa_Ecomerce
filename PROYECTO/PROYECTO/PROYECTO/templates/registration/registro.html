@@ -1,0 +1,27 @@
+{% extends "registration/layout.html" %}
+
+{% block content %}
+
+  <h2>Formulario de Registro</h2>
+  <br>
+  <form method="post">
+    {% csrf_token %}
+    {% for campo in form %}
+      <p>
+        &nbsp;&nbsp;
+        {{ campo.label_tag }}<br>
+        {{ campo }}
+        {% if campo.help_text %}
+        <br>&nbsp;&nbsp;
+          <small style="color: grey">{{ campo.help_text }}</small>
+        {% endif %}
+        {% for error in campo.errors %}
+          <p style="color: red">{{ error }}</p>
+        {% endfor %}
+      </p>
+    {% endfor %}
+    &nbsp;&nbsp;
+    <button class="btn btn-success btn-sm mb-5 mt-5" type="submit">Confirmar Registro</button>
+  </form>
+  
+{% endblock %}
