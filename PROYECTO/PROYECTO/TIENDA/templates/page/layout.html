@@ -1,0 +1,127 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Hace las compras de tus productos JAGUARETE sin moverte de tu casa" />
+    <meta name="author" content="Labrador Brazda, Fernando Martin" />
+    <title>JAGUARETE S.A.</title>
+    <link rel="stylesheet" href="{% static 'estilos.css' %}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+    <script src="https://kit.fontawesome.com/ad87122803.js" crossorigin="anonymous"></script>
+    <script src="{% static 'scripts.js' %}"></script>
+</head>
+
+<body>
+    <div class="container d-flex flex-column min-vh-100">
+
+        <!---- Header ----->
+        <header>
+            <div id="bloque_login">
+                {% if user.is_authenticated %}
+                ¡Hola!🖐 <b>{{ user.get_username }}</b> <a role="button" class="btn btn-outline-danger btn-sm"
+                    href="{% url 'logout'%}?next={{request.path}}">SALIR</a>
+                {% if user not in es_moderador %}
+                <a role="button" class="btn btn-outline-success btn-sm" href="{% url 'TIENDA:carrito' %}"><i
+                        class="fas fa-shopping-cart mr-1"></i>CARRITO</a>
+                {% endif %}
+                {% else %}
+                <a role="button" class="btn btn-outline-success btn-sm"
+                    href="{% url 'login'%}?next={{request.path}}">ACCEDER</a>
+                <a role="button" class="btn btn-outline-success btn-sm"
+                    href="{% url 'USUARIOS:registrarse' %}">REGISTRO</a>
+                {% endif %}
+            </div>
+
+            <h1 class="font-weight-bolder">JAGUARETE S.A.</h1>
+
+        </header>
+
+        <!---- Nav ----->
+
+        <nav class="navbar navbar-expand-lg navbar-light bg-info mb-4">
+
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'TIENDA:index' %}">
+                            HOME
+                        </a>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <div class="dropdown">
+                            <a type="button" class="nav-link dropdown-toggle" data-toggle="dropdown">
+                                CATEGORIAS
+                            </a>
+                            <div class="dropdown-menu bg-info mt-2">
+                                {% for categoria in lista_categorias %}
+                                <a class="dropdown-item bg-info" href="{% url 'TIENDA:buscador' categoria.id %}">
+                                    {{ categoria }}</a>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'TIENDA:acerca_de' %}">
+                            ACERCA DE
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="mailto:contacto@jaguarete-kaa.shop.ar">
+                            CONTACTO
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        {% if perms.TIENDA.add_producto %}
+                        <a class="nav-link" href="{% url 'TIENDA:producto_alta' %}">
+                            <strong> + NUEVO PRODUCTO</strong>
+                        </a>
+                        {% endif %}
+                    </li>
+                </ul>
+                <form class="form-inline my-2 my-lg-0" method="POST" action="{% url 'TIENDA:buscador'  %}">
+                    {% csrf_token %}
+                    <input name="busqueda" class="form-control mr-sm-2" type="search" placeholder="Buscar"
+                        aria-label="Search">
+                    <button class="btn btn-warning my-2 my-sm-0" type="submit"><i class="fas fa-search"></i></button>
+                </form>
+            </div>
+        </nav>
+
+        {% block content %}
+        {% endblock %}
+
+        <!--- Footer ---->
+
+        <footer class="footer mt-auto text-faded text-center py-2 bg-dark text-white">
+            <div class="container">
+                <p>&copy; Copyright 2021 Jaguarete Kaa SA, todos los derechos reservados. </p>
+                <p class="m-auto">Design by <a href="https://github.com/Mhz-ar">Fernando M. Labrador B.</a>🧱</p>
+
+            </div>
+        </footer>
+    </div>
+</body>
+
+</html>

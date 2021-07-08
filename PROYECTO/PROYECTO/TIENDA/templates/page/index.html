@@ -1,0 +1,60 @@
+{% extends "page/layout.html" %}
+{% block content %}
+
+<div class="row">
+    {% for producto in lista_productos_imagenes %}
+
+    <div class="col-md-4">
+
+        <div class="card" style="width: 100%; margin: 5px;">
+            <h4 class="text-center my-2"><ins>{{ producto.titulo }}</ins></h4>
+            <img style="height: 20em;" src="{{producto.imagen.url}}" class="card-img-top">
+            <div class="card-body" style="text-align: center;">
+                <strong class="h5 mr-5">${{producto.precio|floatformat:2}}</strong>
+                {% if user in es_moderador %}
+
+                <a role="button" class="btn btn-warning btn-sm"
+                    href="{% url 'TIENDA:producto_editar' producto.id %}">EDITAR</a>
+                {% else %}
+
+                <a role="button" class="btn btn-success btn-sm" href="{% url 'TIENDA:producto' producto.id %}">VER
+                    PRODUCTO</a>
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+
+    {% endfor %}
+</div>
+
+<h2 class="text-center my-5">MAS PRODUCTOS</h2>
+
+
+<ul style="list-style:none">
+    {% for producto in lista_productos %}
+    <li>
+        <div class="list-group my-2">
+
+            {% if perms.TIENDA.change_producto %}
+            <a href="{% url 'TIENDA:producto_editar' producto.id %}" class="list-group-item list-group-item-action">
+                <img src="{{producto.imagen.url }}" class="rounded float-left mr-3" height="100px" width="100px">&nbsp;
+                <h5>{{ producto.titulo }}</h5>
+                {{producto.descripcion_producto |safe}}
+            </a>
+            {% else %}
+            <a href="{% url 'TIENDA:producto' producto.id %}" class="list-group-item list-group-item-action">
+                <img src="{{producto.imagen.url }}" class="rounded float-left mr-3" height="100px" width="100px">&nbsp;
+                <h5>{{ producto.titulo }}</h5>
+                {{producto.descripcion_producto |safe}}
+            </a>
+            {% endif %}
+
+        </div>
+
+    </li>
+
+    {% endfor %}
+</ul>
+
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends "page/layout.html" %}
+
+{% block content %}
+
+<div>
+    <h2>{{ mensaje }}</h2>
+
+    {% if lista_carrito %}
+
+    {% for producto in lista_carrito %}
+    <ul>
+        <li>{{ producto.titulo }}<a role="button" class="btn btn-outline-danger btn-sm"
+                href="{% url 'TIENDA:carrito_eliminar' producto.id %}">X</a></li>
+    </ul>
+    {% endfor %}
+    <a role="button" class="btn btn-success btn-sm" href="{% url 'TIENDA:carrito_eliminar' %}">VACIAR CARRO</a>
+    <a role="button" class="btn btn-success btn-sm" href="{% url 'TIENDA:index' %}">HOME</a>
+    {% else %}
+    <a role="button" class="btn btn-success btn-sm" href="{% url 'TIENDA:index' %}">HOME</a>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}
+
+<h1>{{ variable }}</h1>
